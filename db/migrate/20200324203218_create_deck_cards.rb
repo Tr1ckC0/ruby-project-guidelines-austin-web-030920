@@ -1,4 +1,4 @@
-class CreateDeckCard < ActiveRecord::Migration[5.0]
+class CreateDeckCards < ActiveRecord::Migration[5.0]
   def change
     create_table :deck_cards do |t|
       t.integer :deck_id 
@@ -6,3 +6,5 @@ class CreateDeckCard < ActiveRecord::Migration[5.0]
     end
   end
 end
+
+
