@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200324162935) do
+ActiveRecord::Schema.define(version: 20200324200007) do
 
   create_table "cards", force: :cascade do |t|
     t.string  "name"
@@ -27,6 +27,11 @@ ActiveRecord::Schema.define(version: 20200324162935) do
     t.integer "toughness"
     t.string  "legality"
     t.string  "imageURL"
+  end
+
+  create_table "decks", force: :cascade do |t|
+    t.string "title"
+    t.string "rank"
   end
 
 end
