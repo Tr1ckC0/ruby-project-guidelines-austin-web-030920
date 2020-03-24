@@ -34,4 +34,9 @@ ActiveRecord::Schema.define(version: 20200324200007) do
     t.string "rank"
   end
 
+  create_table "deck_cards", force: :cascade do |t|
+    t.integer "deck_id"
+    t.integer "card_id"
+  end
+
 end
