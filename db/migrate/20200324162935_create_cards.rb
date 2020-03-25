@@ -4,7 +4,7 @@ class CreateCards < ActiveRecord::Migration[5.0]
       t.string  :name
       t.string  :mana_cost
       t.integer :total_mana_cost
-      t.string  :color
+      t.string  :color   #may want to change to :colors
       t.string  :mana_type
       t.string  :types
       t.string  :subtypes
@@ -13,7 +13,7 @@ class CreateCards < ActiveRecord::Migration[5.0]
       t.string  :text
       t.integer :power
       t.integer :toughness
-      t.string  :legality
+      t.string  :legality   #hard to access
       t.string  :imageURL
     end
   end

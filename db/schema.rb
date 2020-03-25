@@ -35,8 +35,9 @@ ActiveRecord::Schema.define(version: 20200325011753) do
   end
 
   create_table "decks", force: :cascade do |t|
-    t.string "title"
-    t.string "rank"
+    t.string  "title"
+    t.string  "rank"
+    t.integer "user_id"
   end
 
   create_table "user_cards", force: :cascade do |t|
