@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200324200007) do
+ActiveRecord::Schema.define(version: 20200325011753) do
 
   create_table "cards", force: :cascade do |t|
     t.string  "name"
@@ -29,14 +29,24 @@ ActiveRecord::Schema.define(version: 20200324200007) do
     t.string  "imageURL"
   end
 
+  create_table "deck_cards", force: :cascade do |t|
+    t.integer "deck_id"
+    t.integer "card_id"
+  end
+
   create_table "decks", force: :cascade do |t|
     t.string "title"
     t.string "rank"
   end
 
-  create_table "deck_cards", force: :cascade do |t|
-    t.integer "deck_id"
+  create_table "user_cards", force: :cascade do |t|
+    t.integer "user_id"
     t.integer "card_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username"
+    t.string "password"
   end
 
 end
