@@ -1,3 +1,6 @@
+require_relative 'access_db'
+
+
 class CLI
     
     
@@ -24,14 +27,29 @@ class CLI
        puts "   3: Manage Decks"
     end
 
-    # def search_for_new_cards
-    #         prompt_search_params
-    #         response = get_input.to_i
-    #         param_url = setup_url_by_params(response)
-    #         prompt_search_terms
-    #         search_terms = get_input
-    #         full_url = setup_full_url(param_url, search_terms)
-    # end
+    def search_for_new_cards
+        prompt_search_params
+        num = get_input.to_i
+        case num
+        when 1
+            puts "Please type a card name:"
+            search = get_input
+            url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+        when 2
+            puts "Please type a card color:"
+            search = get_input
+            url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
+        when 3
+            puts "Please type a card type:"
+            search = get_input
+            url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+        else
+            puts "Invalid command."
+            search_for_new_cards
+        end
+        
+        results = AccessAPI.new.seed_db_with_cards(url)
+    end
 
     def prompt_search_params
         puts "Enter a number based on how you would like to search:"
@@ -40,27 +58,28 @@ class CLI
         puts "     3: Search by type"
     end
 
-    def build_url
-        prompt_search_params
-        num = get_input.to_i
-        case num
-        when 1
-            puts "Please type a card name:"
-            search = get_input
-            url_param = "https://api.magicthegathering.io/v1/cards?name=#{search}"
-        when 2
-            puts "Please type a card color:"
-            search = get_input
-            url_param = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
-        when 3
-            puts "Please type a card type:"
-            search = get_input
-            url_param = "https://api.magicthegathering.io/v1/cards?name=#{search}"
-        else
-            puts "Invalid command."
-        end
-        url
-    end
+    # def build_url
+    #     prompt_search_params
+    #     num = get_input.to_i
+    #     case num
+    #     when 1
+    #         puts "Please type a card name:"
+    #         search = get_input
+    #         url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+    #     when 2
+    #         puts "Please type a card color:"
+    #         search = get_input
+    #         url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
+    #     when 3
+    #         puts "Please type a card type:"
+    #         search = get_input
+    #         url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+    #     else
+    #         puts "Invalid command."
+    #         build_url
+    #     end
+    #     url
+    # end
 
     # def setup_url_by_params(num)
     #     url = nil
@@ -85,6 +104,8 @@ class CLI
     #     url = "#{params}" + "#{search}"
     # end
 end
+
+
 
 
 # def run(songs)

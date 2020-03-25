@@ -10,7 +10,7 @@ class AccessAPI
 
    
 
-    def filter_mtg_api(url)
+    def filter_mtg(url)
         data = AccessAPI.new.get_parse("#{url}")
 
         card_data = []
@@ -35,26 +35,26 @@ class AccessAPI
         card_data
     end
 
-    def seed_db_with_cards
-       card_data = filter_mtg_api
-       
+    def seed_db_with_cards(url)
+       card_data = filter_mtg(url)
+
        card_data.map do |card|
-        Card.find_or_create_by(
-                name:               card[:name],
-                mana_cost:          card[:mana_cost],
-                total_mana_cost:    card[:total_mana_cost],
-                color:              card[:color],
-                mana_type:          card[:mana_type],
-                types:              card[:types],
-                subtypes:           card[:subtypes],
-                rarity:             card[:rarity],
-                set:                card[:set],
-                text:               card[:text],
-                power:              card[:power],
-                toughness:          card[:toughness],
-                legality:           card[:legality],
-                imageURL:           card[:imageURL]
-            )
+        Card.find_or_create_by(card)
+            #     name:               card[:name],
+            #     mana_cost:          card[:mana_cost],
+            #     total_mana_cost:    card[:total_mana_cost],
+            #     color:              card[:color],
+            #     mana_type:          card[:mana_type],
+            #     types:              card[:types],
+            #     subtypes:           card[:subtypes],
+            #     rarity:             card[:rarity],
+            #     set:                card[:set],
+            #     text:               card[:text],
+            #     power:              card[:power],
+            #     toughness:          card[:toughness],
+            #     legality:           card[:legality],
+            #     imageURL:           card[:imageURL]
+            # )
        end
     end
 end
