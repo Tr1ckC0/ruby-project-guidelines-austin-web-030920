@@ -8,8 +8,10 @@ class AccessAPI
         JSON.parse(response)
     end
 
-    def filter_mtg_api(search_terms)
-        data = AccessAPI.new.get_parse("https://api.magicthegathering.io/v1/cards")
+   
+
+    def filter_mtg_api(url)
+        data = AccessAPI.new.get_parse("#{url}")
 
         card_data = []
         data["cards"].each do |card|
