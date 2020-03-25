@@ -40,6 +40,28 @@ class CLI
         puts "     3: Search by type"
     end
 
+    def build_url
+        prompt_search_params
+        num = get_input.to_i
+        case num
+        when 1
+            puts "Please type a card name:"
+            search = get_input
+            url_param = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+        when 2
+            puts "Please type a card color:"
+            search = get_input
+            url_param = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
+        when 3
+            puts "Please type a card type:"
+            search = get_input
+            url_param = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+        else
+            puts "Invalid command."
+        end
+        url
+    end
+
     # def setup_url_by_params(num)
     #     url = nil
     #     case num
