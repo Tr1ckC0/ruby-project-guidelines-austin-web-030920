@@ -3,7 +3,7 @@ class CLI
     def run
         greeting
         user_login
-        choose_from_option_tree
+        main_menu
     end
     
     def greeting
@@ -53,14 +53,14 @@ class CLI
        puts "   * type 'exit' to quit"
     end
 
-    def choose_from_option_tree
+    def main_menu
         prompt_user
         input = get_input
         case input
         when '1'
             search_for_new_cards
         when '2'
-            #@current_user.view_cards
+            view_collection
         when '3'
             #manage decks
         when 'exit'
@@ -69,7 +69,7 @@ class CLI
             puts ''
         else
             "Invalid command."
-            choose_from_option_tree
+            main_menu
         end
     end
 
@@ -136,7 +136,7 @@ class CLI
                end
                 puts ''
                 puts "All cards added"
-                choose_from_option_tree
+                main_menu
 
             elsif @results.map {|card| card.id}.include?(response.to_i)
                 @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
@@ -151,7 +151,7 @@ class CLI
             end
 
         elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
-            choose_from_option_tree
+            main_menu
         else
             puts ''
             puts "Invalid command."
@@ -207,9 +207,64 @@ class CLI
 
 #----------------------------------------------SEARCH FOR NEW CARDS-----------------------------------------------------------------
 
+#--------------------------------------------- VIEW THE COLLECTION ------------------------------------------------------------------
+def view_collection
+    puts "Total cards in your collection are: #{@current_user.cards.count}"
+    collection_menu
+end
 
+def collection_menu
+    puts "Please enter a number from the following options:"
+    puts "   * or type 'back' to return to main menu"
+    puts "1. View all cards."
+    puts "2. View all cards by color."
+    puts "3. View all cards by rarity."
+    response = get_input
+    case response
+    when '1'
+        view_all_cards
+        collection_menu
+    when '2'
+        view_cards_by_color
+        collection_menu
+    when '3'
+        view_cards_by_rarity
+        collection_menu
+    when 'back'
+        main_menu
+    else 
+        puts "Invalid command"
+        collection_menu
+    end
+end
 
+def view_all_cards
+    @current_user.cards.each do |card|
+        card.display
+    end
+end
 
+def view_cards_by_color
+    sorted_array = @current_user.cards.sort_by do |card|
+        card.color
+    end
+
+    sorted_array.each do |card|
+        card.display
+    end
+end
+
+def view_cards_by_rarity
+   sorted_array = @current_user.cards.sort_by do |card|
+        card.rarity
+   end
+
+   sorted_array.each do |card|
+        card.display
+   end
+end
+
+#--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
 end
 
 
