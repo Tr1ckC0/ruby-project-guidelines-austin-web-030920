@@ -319,7 +319,7 @@ def view_edit_a_deck
     response = get_input
     case response
     when '1'
-        #view_deck
+        view_deck
     when '2'
         #add_card
     when '3'
@@ -355,16 +355,14 @@ def select_deck
 end
 
 def view_deck
-    puts "Please enter Deck Name"
-    response = get_input
-    Deck.each (user.id, name, rank)
-
+    select_deck
+    view_all_cards
 end
 
-def add_a_card
+# def add_a_card
 
-end
-end
+# end
+# end
 
 #----------------------------------------------- MANAGE DECK --------------------------------------------------------------------
 
