@@ -1,16 +1,39 @@
 class CLI
-    
+
+    def run
+        greeting
+        # user_login
+        prompt_user
+        choose_from_option_tree
+    end
     
     def greeting
-        puts "Welcome to Magic the Gathering Manager"
+        puts '-' * 100
+        puts ''
+        puts "Welcome to the Magic Manager"
+        puts ''
+        puts '-' * 100
+        puts ''
+        puts 'Here you can keep your Magic the Gathering collection organized.'
+        puts ''
+        puts 'Please enter a USERNAME and PASSWORD to begin.'
     end
 
-    def user_login(username, password)
-        #prompt the user for :username and :password
-        #somehow authenticate that
-        #search User based on input and return the specific user
-        #save the user to an instance variable
-        @current_user = User.find_by(username: username, password: password)
+    def user_login
+        puts "username:"
+        username = get_input
+        puts "password:"
+        password = get_input
+        @current_user = User.find_or_create_by(username: username, password: password)
+        ####to authenticate
+                #find or creat by username
+                #if password == nil
+                    #user.password = password
+                #elsif password == user.password
+                    #sign-in successful
+                #else 
+                    #password and username do not match.. please try again
+        ####to authenticate
     end
 
     def get_input
@@ -18,10 +41,26 @@ class CLI
     end
 
     def prompt_user
+       puts ''
        puts "Enter a number to select an option below:"
        puts "   1: Search for New Cards"
        puts "   2: View Collection" #user_card
        puts "   3: Manage Decks"
+    end
+
+    def choose_from_option_tree
+        input = get_input.to_i
+        case input
+        when 1
+            search_for_new_cards
+        when 2
+            #view collection
+        when 3
+            #manage decks
+        else
+            "Invalid input. Please enter a valid command:"
+            option_tree
+        end
     end
 
 #-----------------------------------------------SEARCH FOR NEW CARDS -----------------------------------------------------------------
@@ -53,6 +92,7 @@ class CLI
     end
 
     def prompt_search_params
+        puts ''
         puts "Enter a number based on how you would like to search:"
         puts "     1: Search by name"
         puts "     2: Search by color"

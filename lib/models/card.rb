@@ -7,8 +7,8 @@ class Card < ActiveRecord::Base
 
     def display
         puts "------------------------------------------------------------------------------------------------------------"
-        puts ""
         puts "NAME              -    #{self.name}"
+        puts ""
         puts "MANA COST         -    #{self.mana_cost}"
         puts "TOTAL MANA COST   -    #{self.total_mana_cost}"
         puts "COLOR             -    #{self.color}"
