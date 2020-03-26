@@ -106,13 +106,29 @@ class CLI
             puts ''
             puts "Please type the card ID (located in the top right corner of the card info)"
             puts "* or type 'all' to add cards"
+            #seperate method
             response = get_input
-
+        
             if response == 'all'
-                
-            
-            @current_user.user_card.find_or_create_by(user_id: @current_user, card_id: response)
-            
+               @results.each do |card|
+                @current_user.user_card.find_or_create_by(
+                    user_id: @current_user.id,
+                    card_id: card.id
+                )
+                puts "All cards added"
+
+            elsif @results.map {|card| card.id}.include?(response.to_i)
+                @current_user.user_card.find_or_create_by(user_id: @current_user.id, card_id: response)
+                puts "Cards Added Successfully"
+
+            else
+                puts "Please enter a valid card ID"
+                puts "* or type 'all' to add all cards"
+                #seperate method call
+            end
+
+        elsif input == 'n'
+
         end
     end
 
