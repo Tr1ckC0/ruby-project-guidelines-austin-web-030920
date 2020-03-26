@@ -4,6 +4,7 @@ class CLI
         greeting
         user_login
         main_menu
+        puts "Goodbye"
     end
     
     def greeting
@@ -56,20 +57,18 @@ class CLI
     def main_menu
         prompt_user
         input = get_input
-        case input
-        when '1'
-            search_for_new_cards
-        when '2'
-            view_collection
-        when '3'
-            #manage decks
-        when 'exit'
-            puts ''
-            puts 'Goodbye.'
-            puts ''
-        else
-            "Invalid command."
-            main_menu
+        until input == 'exit' do
+            case input
+            when '1'
+                search_for_new_cards
+             when '2'
+                 view_collection
+             when '3'
+                #manage decks
+            else
+                 "Invalid command."
+                main_menu
+            end
         end
     end
 
@@ -94,6 +93,9 @@ class CLI
             puts "Please type a card name:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+            @results = Card.all[0..8] ###hard code to not access API for now
+            @results.each {|card| card.display_by_name_and_id}
+            prompt_user_to_add_from_results
         when '2'
             puts ''
             puts "Please type a card color:"
@@ -103,16 +105,14 @@ class CLI
             puts ''
             puts "Please type a card type:"
             search = get_input
-            url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
+            url = "https://api.magicthegathering.io/v1/cards?types=#{search}"
         else
             puts "Invalid command."
             search_menu
         end
         
         # @results = AccessAPI.new.seed_db_with_cards(url)
-        @results = Card.all[0..8] ###hard code to not access API for now
-        @results.each {|card| card.display_by_name_and_id}
-        prompt_user_to_add_from_results
+
     end
 
     def prompt_search_params
@@ -131,10 +131,12 @@ class CLI
         puts "     1. View full card details"
         puts "     2. Add cards to your collection"
         puts "     3. Make another search"
+        puts ''
+        puts "* or type 'back' to return to the main menu"
         input = get_input
         case input
         when '1'
-            #view full card details
+            view_full_details_from_results
         when '2'
             #add cards to your collection
         when '3'
@@ -146,6 +148,28 @@ class CLI
             prompt_user_to_add_from_results
         end
     end
+
+    def view_full_details_from_results
+        puts ''
+        puts "Please enter the card ID to view details:"
+        puts "(or type 'all' to view all)"
+        puts ''
+        puts "*type 'back' to return to the previous menu"
+        response = get_input
+        if response == 'all'
+            @results.each {|card| card.display}
+            view_full_details_from_results
+        elsif @results.map {|card| card.id}.include?(response.to_i)
+                @results.find {|card| card.id == response.to_i}.display
+            view_full_details_from_results
+        elsif response == 'back'
+            prompt_user_to_add_from_results
+        else
+            puts "Invalid command."
+            view_full_details_from_results
+        end
+        
+    end
         
         #def add cards to your collection
         # if input == "y" || input == "yes" || input == "Y" || input == "Yes"
@@ -154,30 +178,30 @@ class CLI
         #     puts "* or type 'all' to add cards"
         #     #seperate method
         #     response = get_input
-            
-        
-        #     if response == 'all'
-        #        @results.each do |card|
-        #         @current_user.user_cards.find_or_create_by(
-        #             user_id: @current_user.id,
-        #             card_id: card.id
-        #         )
-        #        end
-        #         puts ''
-        #         puts "All cards added"
-        #         main_menu
+        # if response == 'all'
+        #     @results.each do |card|
+        #     @current_user.user_cards.find_or_create_by(
+        #         user_id: @current_user.id,
+        #         card_id: card.id
+        #     )
+        #     end
+        #     puts ''
+        #     puts "All cards added"
+        #     main_menu
 
-        #     elsif @results.map {|card| card.id}.include?(response.to_i)
+        # elsif @results.map {|card| card.id}.include?(response.to_i)
         #         @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
         #         puts ''
         #         puts "Card Added Successfully"
         #         prompt_user_to_add_from_results
 
-        #     else
-        #         puts "Invalid command."
-        #         prompt_user_to_add_from_results
-        #         #seperate method call
-        #     end
+        # else
+        #     puts "Invalid command."
+        #     prompt_user_to_add_from_results
+        
+        # end    
+        
+        #     
 
         # elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
         #     main_menu #when you put search menu then try to navigate back to main menu the 'exit' button on main menu ceases to work
