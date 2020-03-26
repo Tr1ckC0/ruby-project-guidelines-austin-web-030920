@@ -26,4 +26,10 @@ class Card < ActiveRecord::Base
         puts "LEGALITY          -    #{self.legality}"
         puts "VIEW IMAGE        -    #{self.imageURL}"
     end
+
+    def display_by_name_and_id
+        puts '*' * 100
+        puts "#{self.name}" | ID {self.id}
+        puts '*' * 100
+    end
 end

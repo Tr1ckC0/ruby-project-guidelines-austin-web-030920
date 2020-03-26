@@ -73,51 +73,63 @@ class CLI
         end
     end
 
-#-----------------------------------------------SEARCH FOR NEW CARDS -----------------------------------------------------------------
-
     def search_for_new_cards
+        search_menu
+    end
+
+    def view_collection
+        puts "Total cards in your collection are: #{@current_user.cards.count}"
+        collection_menu
+    end
+
+#-----------------------------------------------SEARCH FOR NEW CARDS HELPERS -----------------------------------------------------------------
+    def search_menu
         prompt_search_params
-        num = get_input.to_i
-        case num
-        when 1
+        response = get_input
+        case response
+        when 'back'
+            main_menu
+        when '1'
             puts ''
             puts "Please type a card name:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
-        when 2
+        when '2'
             puts ''
             puts "Please type a card color:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
-        when 3
+        when '3'
             puts ''
             puts "Please type a card type:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
         else
             puts "Invalid command."
-            search_for_new_cards
+            search_menu
         end
         
         # @results = AccessAPI.new.seed_db_with_cards(url)
         @results = Card.all[0..8] ###hard code to not access API for now
-        @results.each {|card| card.display}
+        @results.each {|card| card.display_by_name_and_id}
         prompt_user_to_add_from_results
     end
 
     def prompt_search_params
         puts ''
-        puts "Enter a number based on how you would like to search:"
+        puts "Please enter a number to select from the following options:"
         puts "     1: Search by name"
         puts "     2: Search by color"
         puts "     3: Search by type"
+        puts ''
+        puts "     * or type 'back' to return to the main menu"
     end
 
     def prompt_user_to_add_from_results
         puts ''
         puts "Would you like to add any of these cards to your collection?"
         puts "'Yes' to add cards"
-        puts "'No' to return to main menu"
+        puts "'No' to return to search menu"
         input = get_input
             
         if input == "y" || input == "yes" || input == "Y" || input == "Yes"
@@ -151,7 +163,7 @@ class CLI
             end
 
         elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
-            main_menu
+            main_menu #when you put search menu then try to navigate back to main menu the 'exit' button on main menu ceases to work
         else
             puts ''
             puts "Invalid command."
@@ -208,10 +220,6 @@ class CLI
 #----------------------------------------------SEARCH FOR NEW CARDS-----------------------------------------------------------------
 
 #--------------------------------------------- VIEW THE COLLECTION ------------------------------------------------------------------
-def view_collection
-    puts "Total cards in your collection are: #{@current_user.cards.count}"
-    collection_menu
-end
 
 def collection_menu
     puts "Please enter a number from the following options:"
@@ -265,6 +273,57 @@ def view_cards_by_rarity
 end
 
 #--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
+#--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
+
+def decks_menu
+    deck_menu_prompt
+    response = get_input
+    case response
+    when '1'
+        #create a new deck
+    when '2'
+        #view all decks
+    when '3'
+        #View / edit a deck
+    when 'back'
+        main_menu
+    else
+        puts "Invalid command."
+        decks_menu
+    end
+end
+
+def deck_menu_prompt
+    puts ''
+    puts 'Deck Menu'
+    puts ''
+    puts "Please enter a number to select from the options below:"
+    puts "      1. Create a new deck"
+    puts "      2. View all decks"
+    puts "      3. View / Edit a deck"
+    puts " * or type 'back' to return to main menu"
+end
+
+def create_a_new_deck
+    puts "Please enter the name of your new deck:"
+    name = get_input
+    puts "Please enter a number 1 - 10 to rank your deck"
+    puts "i.e. '1' would be your primary deck"
+    rank = get_input
+    Deck.create(name: name, rank: rank, user_id: @current_user.id)
+end
+
+def view_all_decks
+    @current_user.decks.sort_by {|deck| deck.rank}.each {|deck| deck.display}
+    
+end
+
+def view_edit_a_deck
+    
+end
+
+#--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
+
 end
 
 
