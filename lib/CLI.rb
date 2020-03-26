@@ -86,8 +86,8 @@ class CLI
             search_for_new_cards
         end
         
-        results = AccessAPI.new.seed_db_with_cards(url)
-        results.each {|card| card.display}
+        @results = AccessAPI.new.seed_db_with_cards(url)
+        @results.each {|card| card.display}
     end
 
     def prompt_search_params
@@ -99,15 +99,19 @@ class CLI
     end
 
     def prompt_user_to_add_from_results
-        puts "Would you like to add any of these cards to your collection?"
+        puts "Would you like to add any of these cards to your collection? y / n"
         input = get_input
             
         if input == "y" || input == "yes"
             puts ''
-            puts "Please type the card ID located in the top right corner of the card info."
-            id = get_input
+            puts "Please type the card ID (located in the top right corner of the card info)"
+            puts "* or type 'all' to add cards"
+            response = get_input
+
+            if response == 'all'
+                
             
-            @current_user.user_card.find_or_create_by(user_id: @current_user, card_id: id)
+            @current_user.user_card.find_or_create_by(user_id: @current_user, card_id: response)
             
         end
     end
