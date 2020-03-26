@@ -1,6 +1,3 @@
-require_relative 'access_db'
-
-
 class CLI
     
     
@@ -27,6 +24,8 @@ class CLI
        puts "   3: Manage Decks"
     end
 
+#-----------------------------------------------SEARCH FOR NEW CARDS -----------------------------------------------------------------
+
     def search_for_new_cards
         prompt_search_params
         num = get_input.to_i
@@ -49,6 +48,8 @@ class CLI
         end
         
         results = AccessAPI.new.seed_db_with_cards(url)
+        binding.pry
+        results.each {|card| card.display}
     end
 
     def prompt_search_params
@@ -103,6 +104,12 @@ class CLI
     # def setup_full_url(params, search)
     #     url = "#{params}" + "#{search}"
     # end
+
+#----------------------------------------------SEARCH FOR NEW CARDS-----------------------------------------------------------------
+
+
+
+
 end
 
 

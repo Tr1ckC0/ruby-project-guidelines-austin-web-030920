@@ -1,3 +1,5 @@
+require_relative './models/card.rb'
+
 class AccessAPI
     def get_response(url)
         RestClient.get "#{url}"
