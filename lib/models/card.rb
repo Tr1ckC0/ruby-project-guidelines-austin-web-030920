@@ -28,8 +28,7 @@ class Card < ActiveRecord::Base
     end
 
     def display_by_name_and_id
-        puts '*' * 100
-        puts "#{self.name}" | ID {self.id}
-        puts '*' * 100
+        puts '-' * 50
+        puts "#{self.name} | ID #{self.id}"
     end
 end
