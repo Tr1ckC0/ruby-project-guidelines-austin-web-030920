@@ -3,7 +3,6 @@ class CLI
     def run
         greeting
         user_login
-        prompt_user
         choose_from_option_tree
     end
     
@@ -21,9 +20,11 @@ class CLI
 
     def user_login
         puts "username:"
-        username = get_input
+        # username = get_input
+        username = "tr1ckC0"
         puts "password:"
-        password = get_input
+        # password = get_input
+        password = "123456789"
         @current_user = User.find_or_create_by(username: username, password: password)
         ####to authenticate
                 #find or creat by username
@@ -42,24 +43,33 @@ class CLI
 
     def prompt_user
        puts ''
+       puts "MAIN MENU"
+       puts ''
        puts "Enter a number to select an option below:"
        puts "   1: Search for New Cards"
        puts "   2: View Collection" #user_card
        puts "   3: Manage Decks"
+       puts ''
+       puts "   * type 'exit' to quit"
     end
 
     def choose_from_option_tree
-        input = get_input.to_i
+        prompt_user
+        input = get_input
         case input
-        when 1
+        when '1'
             search_for_new_cards
-        when 2
+        when '2'
             #@current_user.view_cards
-        when 3
+        when '3'
             #manage decks
+        when 'exit'
+            puts ''
+            puts 'Goodbye.'
+            puts ''
         else
-            "Invalid input. Please enter a valid command:"
-            option_tree
+            "Invalid command."
+            choose_from_option_tree
         end
     end
 
@@ -70,14 +80,17 @@ class CLI
         num = get_input.to_i
         case num
         when 1
+            puts ''
             puts "Please type a card name:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
         when 2
+            puts ''
             puts "Please type a card color:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
         when 3
+            puts ''
             puts "Please type a card type:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
@@ -86,8 +99,10 @@ class CLI
             search_for_new_cards
         end
         
-        @results = AccessAPI.new.seed_db_with_cards(url)
+        # @results = AccessAPI.new.seed_db_with_cards(url)
+        @results = Card.all[0..8] ###hard code to not access API for now
         @results.each {|card| card.display}
+        prompt_user_to_add_from_results
     end
 
     def prompt_search_params
@@ -99,10 +114,13 @@ class CLI
     end
 
     def prompt_user_to_add_from_results
-        puts "Would you like to add any of these cards to your collection? y / n"
+        puts ''
+        puts "Would you like to add any of these cards to your collection?"
+        puts "'Yes' to add cards"
+        puts "'No' to return to main menu"
         input = get_input
             
-        if input == "y" || input == "yes"
+        if input == "y" || input == "yes" || input == "Y" || input == "Yes"
             puts ''
             puts "Please type the card ID (located in the top right corner of the card info)"
             puts "* or type 'all' to add cards"
@@ -111,24 +129,33 @@ class CLI
         
             if response == 'all'
                @results.each do |card|
-                @current_user.user_card.find_or_create_by(
+                @current_user.user_cards.find_or_create_by(
                     user_id: @current_user.id,
                     card_id: card.id
                 )
+               end
+                puts ''
                 puts "All cards added"
+                choose_from_option_tree
 
             elsif @results.map {|card| card.id}.include?(response.to_i)
-                @current_user.user_card.find_or_create_by(user_id: @current_user.id, card_id: response)
-                puts "Cards Added Successfully"
+                @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
+                puts ''
+                puts "Card Added Successfully"
+                prompt_user_to_add_from_results
 
             else
-                puts "Please enter a valid card ID"
-                puts "* or type 'all' to add all cards"
+                puts "Invalid command."
+                prompt_user_to_add_from_results
                 #seperate method call
             end
 
-        elsif input == 'n'
-
+        elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
+            choose_from_option_tree
+        else
+            puts ''
+            puts "Invalid command."
+            prompt_user_to_add_from_results
         end
     end
 
