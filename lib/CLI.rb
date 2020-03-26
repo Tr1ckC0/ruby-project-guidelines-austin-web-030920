@@ -321,7 +321,7 @@ def view_edit_a_deck
     when '1'
         view_deck
     when '2'
-        #add_card
+        add_a_card
     when '3'
         #remove_card
     when 'back'
@@ -351,17 +351,29 @@ def select_deck
         i += 1
     end
     index = get_input.to_i
-    @current_user.decks[index - 1]
+        @current_user.decks[index - 1]
 end
 
 def view_deck
-    select_deck
-    view_all_cards
+    deck = select_deck
+    if deck.cards.empty?
+        puts "No cards found!"
+    else
+    deck.cards.each {|card| card.display}
+    end
 end
 
-# def add_a_card
+def add_a_card
+    deck = select_deck
+    puts "Please enter a card name."
+    card_name = get_input
+    card = @current_user.cards.find_by(name: card_name)
+    DeckCard.create(deck_id: deck.id, card_id: card.id)
+    puts "Card Added Successfully to #{deck.title}"
+end
 
-# end
+
+
 # end
 
 #----------------------------------------------- MANAGE DECK --------------------------------------------------------------------
