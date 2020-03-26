@@ -127,49 +127,67 @@ class CLI
 
     def prompt_user_to_add_from_results
         puts ''
-        puts "Would you like to add any of these cards to your collection?"
-        puts "'Yes' to add cards"
-        puts "'No' to return to search menu"
+        puts "Please enter a number to select from the options below:"
+        puts "     1. View full card details"
+        puts "     2. Add cards to your collection"
+        puts "     3. Make another search"
         input = get_input
-            
-        if input == "y" || input == "yes" || input == "Y" || input == "Yes"
-            puts ''
-            puts "Please type the card ID (located in the top right corner of the card info)"
-            puts "* or type 'all' to add cards"
-            #seperate method
-            response = get_input
-        
-            if response == 'all'
-               @results.each do |card|
-                @current_user.user_cards.find_or_create_by(
-                    user_id: @current_user.id,
-                    card_id: card.id
-                )
-               end
-                puts ''
-                puts "All cards added"
-                main_menu
-
-            elsif @results.map {|card| card.id}.include?(response.to_i)
-                @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
-                puts ''
-                puts "Card Added Successfully"
-                prompt_user_to_add_from_results
-
-            else
-                puts "Invalid command."
-                prompt_user_to_add_from_results
-                #seperate method call
-            end
-
-        elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
-            main_menu #when you put search menu then try to navigate back to main menu the 'exit' button on main menu ceases to work
+        case input
+        when '1'
+            #view full card details
+        when '2'
+            #add cards to your collection
+        when '3'
+            search_menu
+        when 'back'
+            main_menu
         else
-            puts ''
-            puts "Invalid command."
+            "Invalid command"
             prompt_user_to_add_from_results
         end
     end
+        
+        #def add cards to your collection
+        # if input == "y" || input == "yes" || input == "Y" || input == "Yes"
+        #     puts ''
+        #     puts "Please type the card ID (located in the top right corner of the card info)"
+        #     puts "* or type 'all' to add cards"
+        #     #seperate method
+        #     response = get_input
+            
+        
+        #     if response == 'all'
+        #        @results.each do |card|
+        #         @current_user.user_cards.find_or_create_by(
+        #             user_id: @current_user.id,
+        #             card_id: card.id
+        #         )
+        #        end
+        #         puts ''
+        #         puts "All cards added"
+        #         main_menu
+
+        #     elsif @results.map {|card| card.id}.include?(response.to_i)
+        #         @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
+        #         puts ''
+        #         puts "Card Added Successfully"
+        #         prompt_user_to_add_from_results
+
+        #     else
+        #         puts "Invalid command."
+        #         prompt_user_to_add_from_results
+        #         #seperate method call
+        #     end
+
+        # elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
+        #     main_menu #when you put search menu then try to navigate back to main menu the 'exit' button on main menu ceases to work
+        # else
+        #     puts ''
+        #     puts "Invalid command."
+        #     prompt_user_to_add_from_results
+        # end
+        #end
+    
 
     # def build_url
     #     prompt_search_params
