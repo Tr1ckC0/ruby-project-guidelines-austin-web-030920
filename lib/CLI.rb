@@ -2,7 +2,7 @@ class CLI
 
     def run
         greeting
-        # user_login
+        user_login
         prompt_user
         choose_from_option_tree
     end
@@ -54,7 +54,7 @@ class CLI
         when 1
             search_for_new_cards
         when 2
-            #view collection
+            #@current_user.view_cards
         when 3
             #manage decks
         else
@@ -87,7 +87,6 @@ class CLI
         end
         
         results = AccessAPI.new.seed_db_with_cards(url)
-        binding.pry
         results.each {|card| card.display}
     end
 
@@ -97,6 +96,20 @@ class CLI
         puts "     1: Search by name"
         puts "     2: Search by color"
         puts "     3: Search by type"
+    end
+
+    def prompt_user_to_add_from_results
+        puts "Would you like to add any of these cards to your collection?"
+        input = get_input
+            
+        if input == "y" || input == "yes"
+            puts ''
+            puts "Please type the card ID located in the top right corner of the card info."
+            id = get_input
+            
+            @current_user.user_card.find_or_create_by(user_id: @current_user, card_id: id)
+            
+        end
     end
 
     # def build_url
