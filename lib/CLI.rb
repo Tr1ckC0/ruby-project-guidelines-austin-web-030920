@@ -21,10 +21,10 @@ class CLI
     def user_login
         puts "username:"
         # username = get_input
-        username = "tr1ckC0"
+        username = "jnuzzi"
         puts "password:"
         # password = get_input
-        password = "123456789"
+        password = "asdf"
         @current_user = User.find_or_create_by(username: username, password: password)
         ####to authenticate
                 #find or creat by username
@@ -62,7 +62,7 @@ class CLI
         when '2'
             view_collection
         when '3'
-            #manage decks
+            manage_decks
         when 'exit'
             puts ''
             puts 'Goodbye.'
@@ -267,6 +267,54 @@ end
 #--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
 end
 
+
+#--------------------------------------------- MANAGE DECK ----------------------------------------------------------------------
+
+def manage_decks
+    manage_decks_prompt
+    response = get_input
+    case response
+    when '1'
+        create_a_new_deck
+    when '2'
+        view_all_decks
+    when '3'
+        #View / edit a deck
+    when 'back'
+        main_menu
+    else
+        puts "Invalid command."
+        decks_menu
+    end
+end
+def manage_decks_prompt
+    puts ''
+    puts 'Deck Menu'
+    puts ''
+    puts "Please enter a number to select from the options below:"
+    puts "      1. Create a new deck"
+    puts "      2. View all decks"
+    puts "      3. View / Edit a deck"
+    puts " * or type 'back' to return to main menu"
+end
+def create_a_new_deck
+    puts "Please enter the name of your new deck:"
+    name = get_input
+    puts "Please enter a number 1 - 10 to rank your deck"
+    puts "i.e. '1' would be your primary deck"
+    rank = get_input.to_i
+    Deck.create(title: name, rank: rank, user_id: @current_user.id)
+    puts "Deck created"
+    puts "#{name}, #{rank}, and #{@current_user.id}"
+end
+def view_all_decks
+    @current_user.decks.sort_by {|deck| deck.rank}.each {|deck| deck.display}
+end
+def view_edit_a_deck
+
+end
+
+#----------------------------------------------- MANAGE DECK --------------------------------------------------------------------
 
 
 
