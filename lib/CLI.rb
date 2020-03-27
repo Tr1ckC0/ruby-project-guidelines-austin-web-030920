@@ -386,12 +386,15 @@ end
         puts ''
         puts 'Deck Editor'
         puts ''
-        puts "Please enter a number to select from the options below:"
-        puts "      1. View Deck"
-        puts "      2. Add a card to your Deck"
-        puts "      3. Remove a card from your Deck"
-        puts ''
-        puts "      * or type 'back' to return to decks menu"
+        prompt = TTY::Prompt.new
+        prompt.select("Select an option below:", ["View Deck", "Add a card to your Deck", 
+        "Remove a card from your Deck", "Back"])
+        # puts "Please enter a number to select from the options below:"
+        # puts "      1. View Deck"
+        # puts "      2. Add a card to your Deck"
+        # puts "      3. Remove a card from your Deck"
+        # puts ''
+        # puts "      * or type 'back' to return to decks menu"
     end
 
     def select_deck
@@ -407,22 +410,22 @@ end
 
     def view_edit_a_deck
         # while true do
-            view_edit_a_deck_prompt
-            response = get_input
-            return decks_menu if response == 'back'
+            
+            response = view_edit_a_deck_prompt
+            return decks_menu if response == 'Back'
             case response
             # when 'back'
             #     decks_menu
             #     break
-            when '1'
+            when "View Deck"
                 view_deck
-            when '2'
+            when "Add a card to your Deck"
                 add_a_card
-            when '3'
+            when "Remove a card from your Deck"
                 remove_a_card
-            else
-                puts "Invalid command."
-                view_edit_a_deck
+            # else
+            #     puts "Invalid command."
+            #     view_edit_a_deck
             end
         # end
     end
