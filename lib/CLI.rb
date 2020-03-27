@@ -309,142 +309,167 @@ end
 #--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
 #--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 
-def decks_menu
-    # while true do
-    deck_menu_prompt
-    response = get_input
-    return main_menu if response == 'back'
-        case response
-        # when 'back'
-        #     main_menu
-        #     break
-        when '1'
-            create_a_new_deck
-        when '2'
-            view_all_decks
-        when '3'
-            #view_edit_a_deck
-        else
-            puts "Invalid command."
-        end
-    # end
-end
-
-def deck_menu_prompt
-    puts ''
-    puts 'Deck Menu'
-    puts ''
-    puts "Please enter a number to select from the options below:"
-    puts "      1. Create a new deck"
-    puts "      2. View all decks"
-    puts "      3. View / Edit a deck"
-    puts ''
-    puts "      * or type 'back' to return to main menu"
-end
-
-def create_a_new_deck
-    puts "Please enter the name of your new deck:"
-    name = get_input
-    puts "Please enter a number 1 - 10 to rank your deck"
-    puts "i.e. '1' would be your primary deck"
-    rank = get_input.to_i
-
-    Deck.create(title: name, rank: rank, user_id: @current_user.id)
-
-    puts "Deck created"
-    puts "NAME: #{name}, RANK: #{rank}"
-    puts ''
-    puts 'Press enter to return'
-    get_input
-    decks_menu
-end
-
-def view_all_decks
-    puts "Your current decks"
-    puts '-' * 50
-    @current_user.decks.sort_by {|deck| deck.rank}.each {|deck| deck.display}
-    puts ''
-    puts "Please press enter to return"
-    get_input
-    decks_menu
-end
-
-def view_edit_a_deck_prompt
-    puts ''
-    puts 'Deck Editor'
-    puts ''
-    puts "Please enter a number to select from the options below:"
-    puts "      1. View Deck"
-    puts "      2. Add a card to your Deck"
-    puts "      3. Remove a card from your Deck"
-    puts ''
-    puts "      * or type 'back' to return to decks menu"
-end
-
-def select_deck
-    i = 1
-    puts "Please enter a number to select a Deck."
-    @current_user.decks.each do |deck|
-        puts "#{i}. #{deck.title}"
-        i += 1
-    end
-    index = get_input.to_i
-        @current_user.decks[index - 1]
-end
-
-def view_edit_a_deck
-    # while true do
-        view_edit_a_deck_prompt
+    def decks_menu
+        # while true do
+        deck_menu_prompt
         response = get_input
-        return decks_menu if response == 'back'
-        case response
-        # when 'back'
-        #     decks_menu
-        #     break
-        when '1'
-            view_deck
-        when '2'
-            add_a_card
-        when '3'
-            #remove_card
+        return main_menu if response == 'back'
+            case response
+            # when 'back'
+            #     main_menu
+            #     break
+            when '1'
+                create_a_new_deck
+            when '2'
+                view_all_decks
+            when '3'
+                view_edit_a_deck
+            else
+                puts "Invalid command."
+                decks_menu
+            end
+        # end
+    end
+
+    def deck_menu_prompt
+        puts ''
+        puts 'Deck Menu'
+        puts ''
+        puts "Please enter a number to select from the options below:"
+        puts "      1. Create a new deck"
+        puts "      2. View all decks"
+        puts "      3. View / Edit a deck"
+        puts ''
+        puts "      * or type 'back' to return to main menu"
+    end
+
+    def create_a_new_deck
+        puts "Please enter the name of your new deck:"
+        name = get_input
+        puts "Please enter a number 1 - 10 to rank your deck"
+        puts "i.e. '1' would be your primary deck"
+        rank = get_input.to_i
+
+        Deck.create(title: name, rank: rank, user_id: @current_user.id)
+
+        puts "Deck created"
+        puts "NAME: #{name}, RANK: #{rank}"
+        puts ''
+        puts 'Press enter to return'
+        get_input
+        decks_menu
+    end
+
+    def view_all_decks
+        puts "Your current decks"
+        puts '-' * 50
+        @current_user.decks.sort_by {|deck| deck.rank}.map {|deck| deck.display}
+        puts ''
+        puts "Please press enter to return"
+        get_input
+        decks_menu
+    end
+
+    def view_edit_a_deck_prompt
+        puts ''
+        puts 'Deck Editor'
+        puts ''
+        puts "Please enter a number to select from the options below:"
+        puts "      1. View Deck"
+        puts "      2. Add a card to your Deck"
+        puts "      3. Remove a card from your Deck"
+        puts ''
+        puts "      * or type 'back' to return to decks menu"
+    end
+
+    def select_deck
+        i = 1
+        puts "Please enter a number to select a Deck."
+        @current_user.decks.each do |deck|
+            puts "#{i}. #{deck.title}"
+            i += 1
+        end
+        index = get_input.to_i
+            @current_user.decks[index - 1]
+    end
+
+    def view_edit_a_deck
+        # while true do
+            view_edit_a_deck_prompt
+            response = get_input
+            return decks_menu if response == 'back'
+            case response
+            # when 'back'
+            #     decks_menu
+            #     break
+            when '1'
+                view_deck
+            when '2'
+                add_a_card
+            when '3'
+                remove_a_card
+            else
+                puts "Invalid command."
+                view_edit_a_deck
+            end
+        # end
+    end
+
+    def view_deck
+        deck = select_deck
+        if deck.cards.empty?
+            puts "No cards found!"
         else
-            puts "Invalid command."
+        view_all_cards_in_deck(deck)
+        end
+        puts ''
+        puts "Please press enter to return"
+        get_input
+        view_edit_a_deck
+    end
+
+    def view_all_cards_in_deck(deck)
+        puts "All the cards in #{deck.title}"
+        puts '-' * 20
+        deck.cards.each {|card| card.display_by_name_and_id}
+    end
+
+    def add_a_card
+        deck = select_deck
+        view_all_cards
+        puts "Above is your card collection"
+        puts "Please enter the name of the card you would like to add:"
+        card_name = get_input
+        card = @current_user.cards.find_by(name: card_name)
+        DeckCard.create(deck_id: deck.id, card_id: card.id)
+        puts "#{card.name} Added Successfully to #{deck.title}"
+        puts ''
+        puts 'Add another card? y / n'
+        response = get_input
+        if response.first == 'y' || response.first == 'Y'
+            add_a_card
+        else
             view_edit_a_deck
         end
-    # end
-end
-
-def view_deck
-    deck = select_deck
-    if deck.cards.empty?
-        puts "No cards found!"
-    else
-     view_all_cards_in_deck(deck)
     end
-end
 
-def view_all_cards_in_deck(deck)
-    puts "All the cards in #{deck.title}"
-    puts '-' * 20
-    deck.cards.each {|card| card.display_by_name_and_id}
-end
-
-def add_a_card
-    deck = select_deck
-    puts "Please enter a card name."
-    card_name = get_input
-    card = @current_user.cards.find_by(name: card_name)
-    DeckCard.create(deck_id: deck.id, card_id: card.id)
-    puts "Card Added Successfully to #{deck.title}"
-    puts ''
-    puts 'Press enter to return'
-    get_input
-    view_edit_a_deck
-end
-
-def remove_a_card
-
-end
+    def remove_a_card
+        deck = select_deck
+        view_all_cards_in_deck(deck)
+        puts "Please enter the name of the card you would like to remove:"
+        card_name = get_input
+        card = @current_user.cards.find_by(name: card_name)
+        DeckCard.find_by(deck_id: deck.id, card_id: card.id).destroy
+        puts "#{card.name} Removed Successfully from #{deck.title}"
+        puts ''
+        puts 'Remove another card? y / n'
+        response = get_input
+        if response.first == 'y' || response.first == 'Y'
+            remove_a_card
+        else
+            view_edit_a_deck
+        end
+    end
 #--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 
 end
