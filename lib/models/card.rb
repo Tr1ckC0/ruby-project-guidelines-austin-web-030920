@@ -28,7 +28,17 @@ class Card < ActiveRecord::Base
     end
 
     def display_by_name_and_id
-        puts '-' * 50
+        puts '-' * 30
         puts "#{self.name} | ID #{self.id}"
+    end
+
+    def display_by_color
+        puts '-' * 30
+        puts "#{self.color.upcase}  |  #{self.name}  |  ID #{self.id}"
+    end
+
+    def display_by_rarity
+        puts '-' * 30
+        puts "#{self.rarity.upcase}  |  #{self.name}  |  ID #{self.id}"
     end
 end

@@ -22,10 +22,10 @@ class CLI
     def user_login
         puts "username:"
         # username = get_input
-        username = "jnuzzi"
+        username = "tr1ckC0"
         puts "password:"
         # password = get_input
-        password = "asdf"
+        password = "123456789"
         @current_user = User.find_or_create_by(username: username, password: password)
         ####to authenticate
                 #find or creat by username
@@ -60,12 +60,15 @@ class CLI
 <<<<<<< HEAD
         return exit if input == 'exit'
             case input
+            # when 'exit'
+            #     exit
+            #     break
             when '1'
                 search_for_new_cards
              when '2'
-                 view_collection
+                view_collection
              when '3'
-                manage_decks
+                decks_menu
             else
                  "Invalid command."
                 main_menu
@@ -100,7 +103,11 @@ class CLI
 
     def exit
         puts ''
+        puts '-' * 100
+        puts ''
         puts "Happy Hunting!"
+        puts ''
+        puts '-' * 100
         puts ''
     end
 
@@ -110,19 +117,25 @@ class CLI
         response = get_input
         return main_menu if response == 'back'
         case response
+        # when 'back'
+        #     main_menu
+        #     break
         when '1'
             puts ''
             puts "Please type a card name:"
-            search = get_input
+            puts "(ex: archangel avacyn)"
+            search = get_input.split.join('+')
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
         when '2'
             puts ''
             puts "Please type a card color:"
+            puts "(ex: red)"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
         when '3'
             puts ''
             puts "Please type a card type:"
+            puts "(ex: creature)"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?types=#{search}"
         else
@@ -130,9 +143,10 @@ class CLI
             search_menu
         end
         
-        # @results = AccessAPI.new.seed_db_with_cards(url)
-        @results = Card.all[0..8] ###hard code to not access API for now
+        @results = AccessAPI.new.seed_db_with_cards(url)
+        # @results = Card.all[0..8] ###hard code to not access API for now
         @results.each {|card| card.display_by_name_and_id}
+        puts "-" * 30
         prompt_user_to_add_from_results
 
     end
@@ -154,14 +168,17 @@ class CLI
         puts "     2. Add cards to your collection"
         puts "     3. Make another search"
         puts ''
-        puts "* or type 'back' to return to the main menu"
+        puts "     * or type 'back' to return to the main menu"
         input = get_input
         return main_menu if input == 'back'
             case input
+            # when 'back'
+            #     main_menu
+            #     break
             when '1'
                 view_full_details_from_results
             when '2'
-                #add cards to your collection
+                search_add_cards_menu
             when '3'
                 search_menu
             else
@@ -177,59 +194,55 @@ class CLI
         puts ''
         puts "*type 'back' to return to the previous menu"
         response = get_input
+
         return prompt_user_to_add_from_results if response == 'back'
         if response == 'all'
             @results.each {|card| card.display}
             view_full_details_from_results
+
         elsif @results.map {|card| card.id}.include?(response.to_i)
                 @results.find {|card| card.id == response.to_i}.display
             view_full_details_from_results
+
         else
             puts "Invalid command."
             view_full_details_from_results
+
         end
     end
         
-        #def add cards to your collection
-        # if input == "y" || input == "yes" || input == "Y" || input == "Yes"
-        #     puts ''
-        #     puts "Please type the card ID (located in the top right corner of the card info)"
-        #     puts "* or type 'all' to add cards"
-        #     #seperate method
-        #     response = get_input
-        # if response == 'all'
-        #     @results.each do |card|
-        #     @current_user.user_cards.find_or_create_by(
-        #         user_id: @current_user.id,
-        #         card_id: card.id
-        #     )
-        #     end
-        #     puts ''
-        #     puts "All cards added"
-        #     main_menu
+        def search_add_cards_menu
+            puts ''
+            puts "Please enter the card ID to add:"
+            puts "(or type 'all' to add all)"
+            puts ''
+            puts "*type 'back' to return to the previous menu"
+            response = get_input
+            return prompt_user_to_add_from_results if response == 'back'
+            
+            if response == 'all'
+                @results.each do |card|
+                @current_user.user_cards.find_or_create_by(
+                    user_id: @current_user.id,
+                    card_id: card.id
+                )
+                end
+                puts ''
+                puts "All cards added"
+                prompt_user_to_add_from_results
 
-        # elsif @results.map {|card| card.id}.include?(response.to_i)
-        #         @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
-        #         puts ''
-        #         puts "Card Added Successfully"
-        #         prompt_user_to_add_from_results
+            elsif @results.map {|card| card.id}.include?(response.to_i)
+                    @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response.to_i)
+                    puts ''
+                    puts "Card Added Successfully"
+                    search_add_cards_menu
 
-        # else
-        #     puts "Invalid command."
-        #     prompt_user_to_add_from_results
+            else
+                puts "Invalid command."
+                search_add_cards_menu
         
-        # end    
-        
-        #     
-
-        # elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
-        #     main_menu #when you put search menu then try to navigate back to main menu the 'exit' button on main menu ceases to work
-        # else
-        #     puts ''
-        #     puts "Invalid command."
-        #     prompt_user_to_add_from_results
-        # end
-        #end
+            end    
+        end
     
 
     # def build_url
@@ -255,296 +268,226 @@ class CLI
     #     url
     # end
 
-    # def setup_url_by_params(num)
-    #     url = nil
-    #     case num
-    #     when 1
-    #         url = "https://api.magicthegathering.io/v1/cards?name="
-    #     when 2
-    #         url = "https://api.magicthegathering.io/v1/cards?colors="
-    #     when 3
-    #         url = "https://api.magicthegathering.io/v1/cards?types="
-    #     else
-    #         "Please enter valid input"
-    #     end
-    #     url
-    # end
-
-    # def prompt_search_terms
-    #     puts "Please enter what you would like to search for:"
-    # end
-
-    # def setup_full_url(params, search)
-    #     url = "#{params}" + "#{search}"
-    # end
-
 #----------------------------------------------SEARCH FOR NEW CARDS-----------------------------------------------------------------
 
 #--------------------------------------------- VIEW THE COLLECTION ------------------------------------------------------------------
 
 def collection_menu
-    puts "Please enter a number from the following options:"
-    puts "   * or type 'back' to return to main menu"
-    puts "1. View all cards."
-    puts "2. View all cards by color."
-    puts "3. View all cards by rarity."
+    while true do
+
+    collection_menu_prompt
     response = get_input
-    return main_menu if response == 'back'
+    
+    # return main_menu if response == 'back'
         case response
+        when 'back'
+            main_menu
+            break
         when '1'
             view_all_cards
-            collection_menu
+            # collection_menu
         when '2'
             view_cards_by_color
-            collection_menu
+            # collection_menu
         when '3'
             view_cards_by_rarity
-            collection_menu
+            # collection_menu
         else 
             puts "Invalid command"
-            collection_menu
+            # collection_menu
         end
+    end
+end
+
+def collection_menu_prompt
+    puts "Please enter a number from the following options:"
+    puts "   1. View all cards."
+    puts "   2. View all cards by color."
+    puts "   3. View all cards by rarity."
+    puts ''
+    puts "   * or type 'back' to return to main menu"
 end
 
 def view_all_cards
     @current_user.cards.each do |card|
-        card.display
+        card.display_by_name_and_id
     end
+    puts ''
 end
 
 def view_cards_by_color
-    sorted_array = @current_user.cards.sort_by do |card|
-        card.color
-    end
-
-    sorted_array.each do |card|
-        card.display
-    end
+    @current_user.cards.sort_by {|card| card.color}.each {|card| card.display_by_color}
+    puts ''
 end
 
 def view_cards_by_rarity
-   sorted_array = @current_user.cards.sort_by do |card|
-        card.rarity
-   end
-
-   sorted_array.each do |card|
-        card.display
-   end
+    @current_user.cards.sort_by {|card| card.rarity}.each {|card| card.display_by_rarity}
+    puts ''
 end
 
 #--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
 #--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 
-def decks_menu
-    deck_menu_prompt
-    response = get_input
-    case response
-    when '1'
-        #create a new deck
-    when '2'
-        #view all decks
-    when '3'
-        #View / edit a deck
-    when 'back'
-        main_menu
-    else
-        puts "Invalid command."
+    def decks_menu
+        # while true do
+        deck_menu_prompt
+        response = get_input
+        return main_menu if response == 'back'
+            case response
+            # when 'back'
+            #     main_menu
+            #     break
+            when '1'
+                create_a_new_deck
+            when '2'
+                view_all_decks
+            when '3'
+                view_edit_a_deck
+            else
+                puts "Invalid command."
+                decks_menu
+            end
+        # end
+    end
+
+    def deck_menu_prompt
+        puts ''
+        puts 'Deck Menu'
+        puts ''
+        puts "Please enter a number to select from the options below:"
+        puts "      1. Create a new deck"
+        puts "      2. View all decks"
+        puts "      3. View / Edit a deck"
+        puts ''
+        puts "      * or type 'back' to return to main menu"
+    end
+
+    def create_a_new_deck
+        puts "Please enter the name of your new deck:"
+        name = get_input
+        puts "Please enter a number 1 - 10 to rank your deck"
+        puts "i.e. '1' would be your primary deck"
+        rank = get_input.to_i
+
+        Deck.create(title: name, rank: rank, user_id: @current_user.id)
+
+        puts "Deck created"
+        puts "NAME: #{name}, RANK: #{rank}"
+        puts ''
+        puts 'Press enter to return'
+        get_input
         decks_menu
     end
-end
 
-def deck_menu_prompt
-    puts ''
-    puts 'Deck Menu'
-    puts ''
-    puts "Please enter a number to select from the options below:"
-    puts "      1. Create a new deck"
-    puts "      2. View all decks"
-    puts "      3. View / Edit a deck"
-    puts " * or type 'back' to return to main menu"
-end
+    def view_all_decks
+        puts "Your current decks"
+        puts '-' * 50
+        @current_user.decks.sort_by {|deck| deck.rank}.map {|deck| deck.display}
+        puts ''
+        puts "Please press enter to return"
+        get_input
+        decks_menu
+    end
 
-def create_a_new_deck
-    puts "Please enter the name of your new deck:"
-    name = get_input
-    puts "Please enter a number 1 - 10 to rank your deck"
-    puts "i.e. '1' would be your primary deck"
-    rank = get_input
-    Deck.create(name: name, rank: rank, user_id: @current_user.id)
-end
+    def view_edit_a_deck_prompt
+        puts ''
+        puts 'Deck Editor'
+        puts ''
+        puts "Please enter a number to select from the options below:"
+        puts "      1. View Deck"
+        puts "      2. Add a card to your Deck"
+        puts "      3. Remove a card from your Deck"
+        puts ''
+        puts "      * or type 'back' to return to decks menu"
+    end
 
-def view_all_decks
-    @current_user.decks.sort_by {|deck| deck.rank}.each {|deck| deck.display}
-    
-end
+    def select_deck
+        i = 1
+        puts "Please enter a number to select a Deck."
+        @current_user.decks.each do |deck|
+            puts "#{i}. #{deck.title}"
+            i += 1
+        end
+        index = get_input.to_i
+            @current_user.decks[index - 1]
+    end
 
-def view_edit_a_deck
-    
-end
+    def view_edit_a_deck
+        # while true do
+            view_edit_a_deck_prompt
+            response = get_input
+            return decks_menu if response == 'back'
+            case response
+            # when 'back'
+            #     decks_menu
+            #     break
+            when '1'
+                view_deck
+            when '2'
+                add_a_card
+            when '3'
+                remove_a_card
+            else
+                puts "Invalid command."
+                view_edit_a_deck
+            end
+        # end
+    end
 
-#--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
-
-end
-
-
-#--------------------------------------------- MANAGE DECK ----------------------------------------------------------------------
-
-def manage_decks
-    manage_decks_prompt
-    response = get_input
-    case response
-    when '1'
-        create_a_new_deck
-    when '2'
-        view_all_decks
-    when '3'
+    def view_deck
+        deck = select_deck
+        if deck.cards.empty?
+            puts "No cards found!"
+        else
+        view_all_cards_in_deck(deck)
+        end
+        puts ''
+        puts "Please press enter to return"
+        get_input
         view_edit_a_deck
-    when 'back'
-        main_menu
-    else
-        puts "Invalid command."
-        decks_menu
     end
-end
-def manage_decks_prompt
-    puts ''
-    puts 'Deck Menu'
-    puts ''
-    puts "Please enter a number to select from the options below:"
-    puts "      1. Create a new deck"
-    puts "      2. View all decks"
-    puts "      3. View / Edit a deck"
-    puts " * or type 'back' to return to main menu"
-end
-def create_a_new_deck
-    puts "Please enter the name of your new deck:"
-    name = get_input
-    puts "Please enter a number 1 - 10 to rank your deck"
-    puts "i.e. '1' would be your primary deck"
-    rank = get_input.to_i
-    Deck.create(title: name, rank: rank, user_id: @current_user.id)
-    puts "Deck created"
-    puts "#{name}, #{rank}, and #{@current_user.id}"
-end
-def view_all_decks
-    @current_user.decks.sort_by {|deck| deck.rank}.each {|deck| deck.display}
 
-# Make look pretty later
-
-end
-
-def view_edit_a_deck
-    view_edit_a_deck_prompt
-    response = get_input
-    case response
-    when '1'
-        view_deck
-    when '2'
-        add_a_card
-    when '3'
-        #remove_card
-    when 'back'
-        decks_menu
-    else
-        puts "Invalid command."
-        decks_menu
+    def view_all_cards_in_deck(deck)
+        puts "All the cards in #{deck.title}"
+        puts '-' * 20
+        deck.cards.each {|card| card.display_by_name_and_id}
     end
-end
 
-def view_edit_a_deck_prompt
-    puts ''
-    puts 'Deck Editor'
-    puts ''
-    puts "Please enter a number to select from the options below:"
-    puts "      1. View Deck"
-    puts "      2. Add a card to your Deck"
-    puts "      3. Remove a card from your Deck"
-    puts " * or type 'back' to return to decks menu"
-end
-
-def select_deck
-    i = 1
-    puts "Please enter a number to select a Deck."
-    @current_user.decks.each do |deck|
-        puts "#{i}. #{deck.title}"
-        i += 1
+    def add_a_card
+        deck = select_deck
+        view_all_cards
+        puts "Above is your card collection"
+        puts "Please enter the name of the card you would like to add:"
+        card_name = get_input
+        card = @current_user.cards.find_by(name: card_name)
+        DeckCard.create(deck_id: deck.id, card_id: card.id)
+        puts "#{card.name} Added Successfully to #{deck.title}"
+        puts ''
+        puts 'Add another card? y / n'
+        response = get_input
+        if response.first == 'y' || response.first == 'Y'
+            add_a_card
+        else
+            view_edit_a_deck
+        end
     end
-    index = get_input.to_i
-        @current_user.decks[index - 1]
-end
 
-def view_deck
-    deck = select_deck
-    if deck.cards.empty?
-        puts "No cards found!"
-    else
-    deck.cards.each {|card| card.display}
+    def remove_a_card
+        deck = select_deck
+        view_all_cards_in_deck(deck)
+        puts "Please enter the name of the card you would like to remove:"
+        card_name = get_input
+        card = @current_user.cards.find_by(name: card_name)
+        DeckCard.find_by(deck_id: deck.id, card_id: card.id).destroy
+        puts "#{card.name} Removed Successfully from #{deck.title}"
+        puts ''
+        puts 'Remove another card? y / n'
+        response = get_input
+        if response.first == 'y' || response.first == 'Y'
+            remove_a_card
+        else
+            view_edit_a_deck
+        end
     end
+#--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 end
-
-def add_a_card
-    deck = select_deck
-    puts "Please enter a card name."
-    card_name = get_input
-    card = @current_user.cards.find_by(name: card_name)
-    DeckCard.create(deck_id: deck.id, card_id: card.id)
-    puts "Card Added Successfully to #{deck.title}"
-end
-
-
-
-# end
-
-#----------------------------------------------- MANAGE DECK --------------------------------------------------------------------
-
-
-
-# def run(songs)
-#     while true do
-#       puts "Please enter a command:"
-#       response = gets.chomp
-#       case response
-#       when "exit"
-#         exit_jukebox
-#         break
-#       when "play"
-#         play(songs)
-#       when "help"
-#         help
-#       when "list"
-#         list(songs)
-#       else
-#         puts "Invalid entry"
-#       end
-#     end
-#   end
-  
-#   def play(songs)
-#     puts "Please enter a song name or number:"
-#     response = gets.chomp
-#     if response.to_i >= 1 && response.to_i <= songs.length
-#       puts "Playing #{songs[response.to_i-1]}"
-#     elsif songs.include?(response)
-#       puts "Playing #{songs.find{|song| song == response}}"
-#     else
-#       puts "Invalid input, please try again"
-#     end
-#   end
-  
-#   def exit_jukebox
-#     puts "Goodbye"
-#   end
-  
-#   def help
-#   puts  "I accept the following commands:"
-#   puts  "- help : displays this help message"
-#   puts  "- list : displays a list of songs you can play"
-#   puts  "- play : lets you choose a song to play"
-#   puts  "- exit : exits this program"
-#   end
-  
-#   def list(songs)
-#   songs.each_with_index {|song, index|
-#     puts "#{index+1}. #{song}"
-#   }
-#   end
