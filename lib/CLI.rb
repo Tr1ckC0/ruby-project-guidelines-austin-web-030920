@@ -310,14 +310,13 @@ end
 #--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 
 def decks_menu
+    while true do
     deck_menu_prompt
     response = get_input
-
-    return main_menu if response == 'back'
         case response
-        # when 'back'
-        #     main_menu
-        #     break
+        when 'back'
+            main_menu
+            break
         when '1'
             create_a_new_deck
         when '2'
@@ -326,8 +325,8 @@ def decks_menu
             #view_edit_a_deck
         else
             puts "Invalid command."
-            decks_menu
         end
+    end
 end
 
 def deck_menu_prompt
@@ -407,10 +406,26 @@ def view_deck
     if deck.cards.empty?
         puts "No cards found!"
     else
-    deck.cards.each {|card| card.display_by_name_and_id}
+     view_all_cards_in_deck(deck)
     end
 end
 
+def view_all_cards_in_deck(deck)
+    deck.cards.each {|card| card.display_by_name_and_id}
+end
+
+def add_a_card
+    deck = select_deck
+    puts "Please enter a card name."
+    card_name = get_input
+    card = @current_user.cards.find_by(name: card_name)
+    DeckCard.create(deck_id: deck.id, card_id: card.id)
+    puts "Card Added Successfully to #{deck.title}"
+end
+
+def remove_a_card
+
+end
 #--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 
 end
