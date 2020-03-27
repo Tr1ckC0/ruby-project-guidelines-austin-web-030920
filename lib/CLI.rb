@@ -125,9 +125,10 @@ class CLI
             search_menu
         end
         
-        # @results = AccessAPI.new.seed_db_with_cards(url)
-        @results = Card.all[0..8] ###hard code to not access API for now
+        @results = AccessAPI.new.seed_db_with_cards(url)
+        # @results = Card.all[0..8] ###hard code to not access API for now
         @results.each {|card| card.display_by_name_and_id}
+        puts "-" * 30
         prompt_user_to_add_from_results
 
     end
