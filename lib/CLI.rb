@@ -22,10 +22,10 @@ class CLI
     def user_login
         puts "username:"
         # username = get_input
-        username = "jnuzzi"
+        username = "tr1ckC0"
         puts "password:"
         # password = get_input
-        password = "asdf"
+        password = "123456789"
         @current_user = User.find_or_create_by(username: username, password: password)
         ####to authenticate
                 #find or creat by username
@@ -57,17 +57,17 @@ class CLI
     def main_menu
         prompt_user
         input = get_input
-        # return exit if input == 'exit'
+        return exit if input == 'exit'
             case input
-            when 'exit'
-                exit
-                break
+            # when 'exit'
+            #     exit
+            #     break
             when '1'
                 search_for_new_cards
              when '2'
-                 view_collection
+                view_collection
              when '3'
-                manage_decks
+                decks_menu
             else
                  "Invalid command."
                 main_menu
@@ -93,24 +93,27 @@ class CLI
     def search_menu
         prompt_search_params
         response = get_input
-        # return main_menu if response == 'back'
+        return main_menu if response == 'back'
         case response
-        when 'back'
-            main_menu
-            break
+        # when 'back'
+        #     main_menu
+        #     break
         when '1'
             puts ''
             puts "Please type a card name:"
-            search = get_input
+            puts "(ex: archangel avacyn)"
+            search = get_input.split.join('+')
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
         when '2'
             puts ''
             puts "Please type a card color:"
+            puts "(ex: red)"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
         when '3'
             puts ''
             puts "Please type a card type:"
+            puts "(ex: creature)"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?types=#{search}"
         else
@@ -142,17 +145,17 @@ class CLI
         puts "     2. Add cards to your collection"
         puts "     3. Make another search"
         puts ''
-        puts "* or type 'back' to return to the main menu"
+        puts "     * or type 'back' to return to the main menu"
         input = get_input
-        # return main_menu if input == 'back'
+        return main_menu if input == 'back'
             case input
-            when 'back'
-                main_menu
-                break
+            # when 'back'
+            #     main_menu
+            #     break
             when '1'
                 view_full_details_from_results
             when '2'
-                #add cards to your collection
+                search_add_cards_menu
             when '3'
                 search_menu
             else
@@ -168,59 +171,55 @@ class CLI
         puts ''
         puts "*type 'back' to return to the previous menu"
         response = get_input
+
         return prompt_user_to_add_from_results if response == 'back'
         if response == 'all'
             @results.each {|card| card.display}
             view_full_details_from_results
+
         elsif @results.map {|card| card.id}.include?(response.to_i)
                 @results.find {|card| card.id == response.to_i}.display
             view_full_details_from_results
+
         else
             puts "Invalid command."
             view_full_details_from_results
+
         end
     end
         
-        #def add cards to your collection
-        # if input == "y" || input == "yes" || input == "Y" || input == "Yes"
-        #     puts ''
-        #     puts "Please type the card ID (located in the top right corner of the card info)"
-        #     puts "* or type 'all' to add cards"
-        #     #seperate method
-        #     response = get_input
-        # if response == 'all'
-        #     @results.each do |card|
-        #     @current_user.user_cards.find_or_create_by(
-        #         user_id: @current_user.id,
-        #         card_id: card.id
-        #     )
-        #     end
-        #     puts ''
-        #     puts "All cards added"
-        #     main_menu
+        def search_add_cards_menu
+            puts ''
+            puts "Please enter the card ID to add:"
+            puts "(or type 'all' to add all)"
+            puts ''
+            puts "*type 'back' to return to the previous menu"
+            response = get_input
+            return prompt_user_to_add_from_results if response == 'back'
+            
+            if response == 'all'
+                @results.each do |card|
+                @current_user.user_cards.find_or_create_by(
+                    user_id: @current_user.id,
+                    card_id: card.id
+                )
+                end
+                puts ''
+                puts "All cards added"
+                prompt_user_to_add_from_results
 
-        # elsif @results.map {|card| card.id}.include?(response.to_i)
-        #         @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response)
-        #         puts ''
-        #         puts "Card Added Successfully"
-        #         prompt_user_to_add_from_results
+            elsif @results.map {|card| card.id}.include?(response.to_i)
+                    @current_user.user_cards.find_or_create_by(user_id: @current_user.id, card_id: response.to_i)
+                    puts ''
+                    puts "Card Added Successfully"
+                    search_add_cards_menu
 
-        # else
-        #     puts "Invalid command."
-        #     prompt_user_to_add_from_results
+            else
+                puts "Invalid command."
+                search_add_cards_menu
         
-        # end    
-        
-        #     
-
-        # elsif input == 'n' || input == 'no' || input == "N" || input == 'No'
-        #     main_menu #when you put search menu then try to navigate back to main menu the 'exit' button on main menu ceases to work
-        # else
-        #     puts ''
-        #     puts "Invalid command."
-        #     prompt_user_to_add_from_results
-        # end
-        #end
+            end    
+        end
     
 
     # def build_url
@@ -280,11 +279,11 @@ def collection_menu
     puts "2. View all cards by color."
     puts "3. View all cards by rarity."
     response = get_input
-    # return main_menu if response == 'back'
+    return main_menu if response == 'back'
         case response
-        when 'back'
-            main_menu
-            break
+        # when 'back'
+        #     main_menu
+        #     break
         when '1'
             view_all_cards
             collection_menu
@@ -332,10 +331,11 @@ end
 def decks_menu
     deck_menu_prompt
     response = get_input
+    return main_menu if response == 'back'
     case response
-    when 'back'
-        main_menu
-        break
+    # when 'back'
+    #     main_menu
+    #     break
     when '1'
         #create a new deck
     when '2'
