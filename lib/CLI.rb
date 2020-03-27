@@ -287,28 +287,19 @@ end
 
 def view_all_cards
     @current_user.cards.each do |card|
-        card.display
+        card.display_by_name_and_id
     end
+    puts ''
 end
 
 def view_cards_by_color
-    sorted_array = @current_user.cards.sort_by do |card|
-        card.color
-    end
-
-    sorted_array.each do |card|
-        card.display
-    end
+    @current_user.cards.sort_by {|card| card.color}.each {|card| card.display_by_color}
+    puts ''
 end
 
 def view_cards_by_rarity
-   sorted_array = @current_user.cards.sort_by do |card|
-        card.rarity
-   end
-
-   sorted_array.each do |card|
-        card.display
-   end
+    @current_user.cards.sort_by {|card| card.rarity}.each {|card| card.display_by_rarity}
+    puts ''
 end
 
 #--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
