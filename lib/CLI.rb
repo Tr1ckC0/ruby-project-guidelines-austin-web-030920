@@ -245,58 +245,44 @@ class CLI
     #     url
     # end
 
-    # def setup_url_by_params(num)
-    #     url = nil
-    #     case num
-    #     when 1
-    #         url = "https://api.magicthegathering.io/v1/cards?name="
-    #     when 2
-    #         url = "https://api.magicthegathering.io/v1/cards?colors="
-    #     when 3
-    #         url = "https://api.magicthegathering.io/v1/cards?types="
-    #     else
-    #         "Please enter valid input"
-    #     end
-    #     url
-    # end
-
-    # def prompt_search_terms
-    #     puts "Please enter what you would like to search for:"
-    # end
-
-    # def setup_full_url(params, search)
-    #     url = "#{params}" + "#{search}"
-    # end
-
 #----------------------------------------------SEARCH FOR NEW CARDS-----------------------------------------------------------------
 
 #--------------------------------------------- VIEW THE COLLECTION ------------------------------------------------------------------
 
 def collection_menu
-    puts "Please enter a number from the following options:"
-    puts "   * or type 'back' to return to main menu"
-    puts "1. View all cards."
-    puts "2. View all cards by color."
-    puts "3. View all cards by rarity."
+    while true do
+
+    collection_menu_prompt
     response = get_input
-    return main_menu if response == 'back'
+    
+    # return main_menu if response == 'back'
         case response
-        # when 'back'
-        #     main_menu
-        #     break
+        when 'back'
+            main_menu
+            break
         when '1'
             view_all_cards
-            collection_menu
+            # collection_menu
         when '2'
             view_cards_by_color
-            collection_menu
+            # collection_menu
         when '3'
             view_cards_by_rarity
-            collection_menu
+            # collection_menu
         else 
             puts "Invalid command"
-            collection_menu
+            # collection_menu
         end
+    end
+end
+
+def collection_menu_prompt
+    puts "Please enter a number from the following options:"
+    puts "   1. View all cards."
+    puts "   2. View all cards by color."
+    puts "   3. View all cards by rarity."
+    puts ''
+    puts "   * or type 'back' to return to main menu"
 end
 
 def view_all_cards
