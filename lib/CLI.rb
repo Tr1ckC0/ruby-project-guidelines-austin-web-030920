@@ -49,7 +49,7 @@ class CLI
        puts '-' * 30
        prompt = TTY::Prompt.new
        prompt.select("Select an option below:", ["Search for New Cards", "View Collection", 
-       "ManageDecks", "Exit"])
+       "Manage Decks", "Exit"])
     #    puts "Enter a number to select an option below:"
     #    puts "   1: Search for New Cards"
     #    puts "   2: View Collection" #user_card
@@ -61,15 +61,15 @@ class CLI
     def main_menu
         input = prompt_user
         return exit if input == "Exit"
-            case 
+            case input
             # when 'exit'
             #     exit
             #     break
-            when 'Search_for_New_Cards'
+            when "Search for New Cards"
                 search_for_new_cards
-             when 'View_Collection'
+             when "View Collection"
                 view_collection
-             when 'Manage_Decks'
+             when "Manage Decks"
                 decks_menu
             end
     end
@@ -166,7 +166,7 @@ class CLI
             end
     end
 
-    def view_full_details_from_results
+    def view_full_details_from_results #####
         puts '-' * 30
         puts "Please enter the card ID to view details:"
         puts "(or type 'all' to view all)"
@@ -254,26 +254,26 @@ class CLI
 def collection_menu
     while true do
 
-    collection_menu_prompt
-    response = get_input
+    
+    response = collection_menu_prompt
     
     # return main_menu if response == 'back'
         case response
-        when 'back'
+        when 'Back'
             main_menu
             break
-        when '1'
+        when "View all cards"
             view_all_cards
             # collection_menu
-        when '2'
+        when "View all cards by color"
             view_cards_by_color
             # collection_menu
-        when '3'
+        when "View all cards by rarity"
             view_cards_by_rarity
             # collection_menu
-        else 
-            puts "Invalid command"
-            # collection_menu
+        # else 
+        #     puts "Invalid command"
+        #     # collection_menu
         end
     end
 end
@@ -282,12 +282,15 @@ def collection_menu_prompt
     puts ''
     puts "Collection Menu"
     puts "-" * 30
-    puts "Please enter a number from the following options:"
-    puts "   1. View all cards."
-    puts "   2. View all cards by color."
-    puts "   3. View all cards by rarity."
-    puts ''
-    puts "   * or type 'back' to return to main menu"
+    prompt = TTY::Prompt.new
+    prompt.select("Select an option below:", ["View all cards", "View all cards by color", 
+    "View all cards by rarity", "Back"])
+    # puts "Please enter a number from the following options:"
+    # puts "   1. "View all cards."
+    # puts "   2. "View all cards by color."
+    # puts "   3. "View all cards by rarity."
+    # puts ''
+    # puts "   * or type 'back' to return to main menu"
 end
 
 def view_all_cards
@@ -321,22 +324,18 @@ end
 
     def decks_menu
         # while true do
-        deck_menu_prompt
-        response = get_input
-        return main_menu if response == 'back'
+        response = deck_menu_prompt
+        return main_menu if response == 'Back'
             case response
             # when 'back'
             #     main_menu
             #     break
-            when '1'
+            when "Create a new deck"
                 create_a_new_deck
-            when '2'
+            when "View all decks"
                 view_all_decks
-            when '3'
+            when "View / Edit a deck"
                 view_edit_a_deck
-            else
-                puts "Invalid command."
-                decks_menu
             end
         # end
     end
@@ -345,12 +344,15 @@ end
         puts ''
         puts 'Deck Menu'
         puts '-' * 30
-        puts "Please enter a number to select from the options below:"
-        puts "      1. Create a new deck"
-        puts "      2. View all decks"
-        puts "      3. View / Edit a deck"
-        puts ''
-        puts "      * or type 'back' to return to main menu"
+        prompt = TTY::Prompt.new
+        prompt.select("Select an option below:", ["Create a new deck", "View all decks", 
+        "View / Edit a deck", "Back"])
+        # puts "Please enter a number to select from the options below:"
+        # puts "      1. "Create a new deck"
+        # puts "      2. "View all decks"
+        # puts "      3. "View / Edit a deck"
+        # puts ''
+        # puts "      * or type 'back' to return to main menu"
     end
 
     def create_a_new_deck
