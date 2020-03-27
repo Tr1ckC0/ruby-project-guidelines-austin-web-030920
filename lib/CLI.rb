@@ -142,27 +142,27 @@ class CLI
 
     def prompt_user_to_add_from_results
         puts '-' * 30
-        puts "Please enter a number to select from the options below:"
-        puts "     1. View full card details"
-        puts "     2. Add cards to your collection"
-        puts "     3. Make another search"
-        puts ''
-        puts "     * or type 'back' to return to the main menu"
-        input = get_input
-        return main_menu if input == 'back'
+        
+        # puts "Please enter a number to select from the options below:"
+        # puts "     1. "View full card details"
+        # puts "     2. "Add cards to your collection"
+        # puts "     3. "Make another search"
+        # puts ''
+        # puts "     * or type 'back' to return to the main menu"
+        prompt = TTY::Prompt.new
+        input = prompt.select("Select an option below:", ["View full card details", "Add cards to your collection", 
+        "Make another search", "Back"])
+        return main_menu if input == 'Back'
             case input
             # when 'back'
             #     main_menu
             #     break
-            when '1'
+            when "View full card details"
                 view_full_details_from_results
-            when '2'
+            when "Add cards to your collection"
                 search_add_cards_menu
-            when '3'
+            when "Make another search"
                 search_menu
-            else
-                "Invalid command"
-                prompt_user_to_add_from_results
             end
     end
 
