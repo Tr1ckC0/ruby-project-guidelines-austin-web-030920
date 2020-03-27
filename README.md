@@ -20,12 +20,15 @@ Mtg API
   **Technologies:** <Linkes to technologies here>
 
 ## Features
-
+1. Able to view over 20,000 different cards ranging from all five colors and rarity and even some banned cards.
+2. Able to add cards into your unique collection and manage them in your decks
+3. Able to remove or delete cards from your decks and customize as you see fit
 
 ### Interesting Notes
-
+We dont have any interesting notes which is pretty boring to be honest, but if we come up with some we will probably forget to edit this anyways so enjoy our project 
 
 ## What we would change
-
+1. We would change the look of the card display to be able to display a picture of the card
+2. We would add more personalization and pazazz
 
 ```
