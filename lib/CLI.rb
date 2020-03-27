@@ -57,7 +57,7 @@ class CLI
     def main_menu
         prompt_user
         input = get_input
-        until input == 'exit' do
+        return exit if input == 'exit'
             case input
             when '1'
                 search_for_new_cards
@@ -69,7 +69,6 @@ class CLI
                  "Invalid command."
                 main_menu
             end
-        end
     end
 
     def search_for_new_cards
@@ -81,21 +80,23 @@ class CLI
         collection_menu
     end
 
+    def exit
+        puts ''
+        puts "Happy Hunting!"
+        puts ''
+    end
+
 #-----------------------------------------------SEARCH FOR NEW CARDS HELPERS -----------------------------------------------------------------
     def search_menu
         prompt_search_params
         response = get_input
+        return main_menu if response == 'back'
         case response
-        when 'back'
-            main_menu
         when '1'
             puts ''
             puts "Please type a card name:"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
-            @results = Card.all[0..8] ###hard code to not access API for now
-            @results.each {|card| card.display_by_name_and_id}
-            prompt_user_to_add_from_results
         when '2'
             puts ''
             puts "Please type a card color:"
@@ -112,6 +113,9 @@ class CLI
         end
         
         # @results = AccessAPI.new.seed_db_with_cards(url)
+        @results = Card.all[0..8] ###hard code to not access API for now
+        @results.each {|card| card.display_by_name_and_id}
+        prompt_user_to_add_from_results
 
     end
 
@@ -134,19 +138,18 @@ class CLI
         puts ''
         puts "* or type 'back' to return to the main menu"
         input = get_input
-        case input
-        when '1'
-            view_full_details_from_results
-        when '2'
-            #add cards to your collection
-        when '3'
-            search_menu
-        when 'back'
-            main_menu
-        else
-            "Invalid command"
-            prompt_user_to_add_from_results
-        end
+        return main_menu if input == 'back'
+            case input
+            when '1'
+                view_full_details_from_results
+            when '2'
+                #add cards to your collection
+            when '3'
+                search_menu
+            else
+                "Invalid command"
+                prompt_user_to_add_from_results
+            end
     end
 
     def view_full_details_from_results
@@ -156,19 +159,17 @@ class CLI
         puts ''
         puts "*type 'back' to return to the previous menu"
         response = get_input
+        return prompt_user_to_add_from_results if response == 'back'
         if response == 'all'
             @results.each {|card| card.display}
             view_full_details_from_results
         elsif @results.map {|card| card.id}.include?(response.to_i)
                 @results.find {|card| card.id == response.to_i}.display
             view_full_details_from_results
-        elsif response == 'back'
-            prompt_user_to_add_from_results
         else
             puts "Invalid command."
             view_full_details_from_results
         end
-        
     end
         
         #def add cards to your collection
@@ -270,22 +271,21 @@ def collection_menu
     puts "2. View all cards by color."
     puts "3. View all cards by rarity."
     response = get_input
-    case response
-    when '1'
-        view_all_cards
-        collection_menu
-    when '2'
-        view_cards_by_color
-        collection_menu
-    when '3'
-        view_cards_by_rarity
-        collection_menu
-    when 'back'
-        main_menu
-    else 
-        puts "Invalid command"
-        collection_menu
-    end
+    return main_menu if response == 'back'
+        case response
+        when '1'
+            view_all_cards
+            collection_menu
+        when '2'
+            view_cards_by_color
+            collection_menu
+        when '3'
+            view_cards_by_rarity
+            collection_menu
+        else 
+            puts "Invalid command"
+            collection_menu
+        end
 end
 
 def view_all_cards
