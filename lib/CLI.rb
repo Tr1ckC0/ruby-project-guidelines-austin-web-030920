@@ -45,7 +45,7 @@ class CLI
     def prompt_user
        puts ''
        puts "MAIN MENU"
-       puts ''
+       puts '-' * 30
        puts "Enter a number to select an option below:"
        puts "   1: Search for New Cards"
        puts "   2: View Collection" #user_card
@@ -79,7 +79,6 @@ class CLI
     end
 
     def view_collection
-        puts "Total cards in your collection are: #{@current_user.cards.count}"
         collection_menu
     end
 
@@ -135,6 +134,8 @@ class CLI
 
     def prompt_search_params
         puts ''
+        puts 'Search Menu'
+        puts '-' * 30
         puts "Please enter a number to select from the following options:"
         puts "     1: Search by name"
         puts "     2: Search by color"
@@ -144,7 +145,7 @@ class CLI
     end
 
     def prompt_user_to_add_from_results
-        puts ''
+        puts '-' * 30
         puts "Please enter a number to select from the options below:"
         puts "     1. View full card details"
         puts "     2. Add cards to your collection"
@@ -170,7 +171,7 @@ class CLI
     end
 
     def view_full_details_from_results
-        puts ''
+        puts '-' * 30
         puts "Please enter the card ID to view details:"
         puts "(or type 'all' to view all)"
         puts ''
@@ -194,7 +195,7 @@ class CLI
     end
         
         def search_add_cards_menu
-            puts ''
+            puts '-' * 30
             puts "Please enter the card ID to add:"
             puts "(or type 'all' to add all)"
             puts ''
@@ -282,6 +283,9 @@ def collection_menu
 end
 
 def collection_menu_prompt
+    puts ''
+    puts "Collection Menu"
+    puts "-" * 30
     puts "Please enter a number from the following options:"
     puts "   1. View all cards."
     puts "   2. View all cards by color."
@@ -291,20 +295,29 @@ def collection_menu_prompt
 end
 
 def view_all_cards
+    puts "You have #{@current_user.cards.count} cards in your collection"
     @current_user.cards.each do |card|
         card.display_by_name_and_id
     end
     puts ''
+    puts "Press enter to return"
+    get_input
 end
 
 def view_cards_by_color
+    puts "You have #{@current_user.cards.count} cards in your collection"
     @current_user.cards.sort_by {|card| card.color}.each {|card| card.display_by_color}
     puts ''
+    puts "Press enter to return"
+    get_input
 end
 
 def view_cards_by_rarity
+    puts "You have #{@current_user.cards.count} cards in your collection"
     @current_user.cards.sort_by {|card| card.rarity}.each {|card| card.display_by_rarity}
     puts ''
+    puts "Press enter to return"
+    get_input
 end
 
 #--------------------------------------------- VIEW THE COLLECTION -----------------------------------------------------------------------
@@ -335,7 +348,7 @@ end
     def deck_menu_prompt
         puts ''
         puts 'Deck Menu'
-        puts ''
+        puts '-' * 30
         puts "Please enter a number to select from the options below:"
         puts "      1. Create a new deck"
         puts "      2. View all decks"
@@ -461,6 +474,7 @@ end
         card_name = get_input
         card = @current_user.cards.find_by(name: card_name)
         DeckCard.find_by(deck_id: deck.id, card_id: card.id).destroy
+        deck.cards.delete(card)
         puts "#{card.name} Removed Successfully from #{deck.title}"
         puts ''
         puts 'Remove another card? y / n'
