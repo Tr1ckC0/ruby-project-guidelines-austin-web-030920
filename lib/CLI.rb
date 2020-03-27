@@ -1,4 +1,5 @@
 class CLI
+    
 
     def run
         greeting
@@ -46,31 +47,30 @@ class CLI
        puts ''
        puts "MAIN MENU"
        puts '-' * 30
-       puts "Enter a number to select an option below:"
-       puts "   1: Search for New Cards"
-       puts "   2: View Collection" #user_card
-       puts "   3: Manage Decks"
-       puts ''
-       puts "   * type 'exit' to quit"
+       prompt = TTY::Prompt.new
+       prompt.select("Select an option below:", ["Search for New Cards", "View Collection", 
+       "ManageDecks", "Exit"])
+    #    puts "Enter a number to select an option below:"
+    #    puts "   1: Search for New Cards"
+    #    puts "   2: View Collection" #user_card
+    #    puts "   3: Manage Decks"
+    #    puts ''
+    #    puts "   * type 'exit' to quit"
     end
 
     def main_menu
-        prompt_user
-        input = get_input
-        return exit if input == 'exit'
-            case input
+        input = prompt_user
+        return exit if input == "Exit"
+            case 
             # when 'exit'
             #     exit
             #     break
-            when '1'
+            when 'Search_for_New_Cards'
                 search_for_new_cards
-             when '2'
+             when 'View_Collection'
                 view_collection
-             when '3'
+             when 'Manage_Decks'
                 decks_menu
-            else
-                 "Invalid command."
-                main_menu
             end
     end
 
@@ -94,34 +94,27 @@ class CLI
 
 #-----------------------------------------------SEARCH FOR NEW CARDS HELPERS -----------------------------------------------------------------
     def search_menu
-        prompt_search_params
-        response = get_input
-        return main_menu if response == 'back'
+        response = prompt_search_params
+        return main_menu if response == 'Back'
         case response
-        # when 'back'
-        #     main_menu
-        #     break
-        when '1'
+        when "Search by name"
             puts ''
             puts "Please type a card name:"
             puts "(ex: archangel avacyn)"
             search = get_input.split.join('+')
             url = "https://api.magicthegathering.io/v1/cards?name=#{search}"
-        when '2'
+        when "Search by color"
             puts ''
             puts "Please type a card color:"
             puts "(ex: red)"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?colors=#{search}"
-        when '3'
+        when "Search by type"
             puts ''
             puts "Please type a card type:"
             puts "(ex: creature)"
             search = get_input
             url = "https://api.magicthegathering.io/v1/cards?types=#{search}"
-        else
-            puts "Invalid command."
-            search_menu
         end
         
         @results = AccessAPI.new.seed_db_with_cards(url)
@@ -136,12 +129,15 @@ class CLI
         puts ''
         puts 'Search Menu'
         puts '-' * 30
-        puts "Please enter a number to select from the following options:"
-        puts "     1: Search by name"
-        puts "     2: Search by color"
-        puts "     3: Search by type"
-        puts ''
-        puts "     * or type 'back' to return to the main menu"
+        prompt = TTY::Prompt.new
+        prompt.select("Select an option below:", ["Search by name", "Search by color", 
+        "Search by type", "Back"])
+        # puts "Please enter a number to select from the following options:"
+        # puts "     1: Search by name"
+        # puts "     2: Search by color"
+        # puts "     3: Search by type"
+        # puts ''
+        # puts "     * or type 'back' to return to the main menu"
     end
 
     def prompt_user_to_add_from_results
