@@ -310,13 +310,14 @@ end
 #--------------------------------------------- MANAGE DECKS ------------------------------------------------------------------------------
 
 def decks_menu
-    while true do
+    # while true do
     deck_menu_prompt
     response = get_input
+    return main_menu if response == 'back'
         case response
-        when 'back'
-            main_menu
-            break
+        # when 'back'
+        #     main_menu
+        #     break
         when '1'
             create_a_new_deck
         when '2'
@@ -358,6 +359,10 @@ def view_all_decks
     puts "Your current decks"
     puts '-' * 50
     @current_user.decks.sort_by {|deck| deck.rank}.each {|deck| deck.display}
+    puts ''
+    puts "Please press enter to return"
+    get_input
+    decks_menu
 end
 
 def view_edit_a_deck_prompt
@@ -384,20 +389,24 @@ def select_deck
 end
 
 def view_edit_a_deck
-    view_edit_a_deck_prompt
-    response = get_input
-    case response
-    when '1'
-        view_deck
-    when '2'
-        add_a_card
-    when '3'
-        #remove_card
-    when 'back'
-        decks_menu
-    else
-        puts "Invalid command."
-        decks_menu
+    # while true do
+        view_edit_a_deck_prompt
+        response = get_input
+        return decks_menu if response == 'back'
+        case response
+        # when 'back'
+        #     decks_menu
+        #     break
+        when '1'
+            view_deck
+         when '2'
+            add_a_card
+        when '3'
+            #remove_card
+        else
+            puts "Invalid command."
+            view_edit_a_deck
+        end
     end
 end
 
