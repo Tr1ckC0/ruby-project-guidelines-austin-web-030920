@@ -57,7 +57,6 @@ class CLI
     def main_menu
         prompt_user
         input = get_input
-<<<<<<< HEAD
         return exit if input == 'exit'
             case input
             # when 'exit'
@@ -73,23 +72,6 @@ class CLI
                  "Invalid command."
                 main_menu
             end
-=======
-        case input
-        when '1'
-            search_for_new_cards
-        when '2'
-            view_collection
-        when '3'
-            manage_decks
-        when 'exit'
-            puts ''
-            puts 'Goodbye.'
-            puts ''
-        else
-            "Invalid command."
-            main_menu
-        end
->>>>>>> 73eaf44cde376e54e8e8babd3f46eaaf863f1e21
     end
 
     def search_for_new_cards
