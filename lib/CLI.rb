@@ -327,7 +327,7 @@ def decks_menu
         else
             puts "Invalid command."
         end
-    end
+    # end
 end
 
 def deck_menu_prompt
@@ -353,6 +353,10 @@ def create_a_new_deck
 
     puts "Deck created"
     puts "NAME: #{name}, RANK: #{rank}"
+    puts ''
+    puts 'Press enter to return'
+    get_input
+    decks_menu
 end
 
 def view_all_decks
@@ -399,7 +403,7 @@ def view_edit_a_deck
         #     break
         when '1'
             view_deck
-         when '2'
+        when '2'
             add_a_card
         when '3'
             #remove_card
@@ -407,7 +411,7 @@ def view_edit_a_deck
             puts "Invalid command."
             view_edit_a_deck
         end
-    end
+    # end
 end
 
 def view_deck
@@ -420,6 +424,8 @@ def view_deck
 end
 
 def view_all_cards_in_deck(deck)
+    puts "All the cards in #{deck.title}"
+    puts '-' * 20
     deck.cards.each {|card| card.display_by_name_and_id}
 end
 
@@ -430,6 +436,10 @@ def add_a_card
     card = @current_user.cards.find_by(name: card_name)
     DeckCard.create(deck_id: deck.id, card_id: card.id)
     puts "Card Added Successfully to #{deck.title}"
+    puts ''
+    puts 'Press enter to return'
+    get_input
+    view_edit_a_deck
 end
 
 def remove_a_card
