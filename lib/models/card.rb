@@ -7,24 +7,24 @@ class Card < ActiveRecord::Base
 
     def display
         puts "------------------------------------------------------------------------------------------------------------"
-        puts "NAME              -    #{self.name}"
-        puts "                                                                                                      ID: #{self.id}"
-        puts "MANA COST         -    #{self.mana_cost}"
-        puts "TOTAL MANA COST   -    #{self.total_mana_cost}"
-        puts "COLOR             -    #{self.color}"
-        puts "MANA TYPES        -    #{self.mana_type}"
-        puts "TYPES             -    #{self.types}"
-        puts "SUBTYPES          -    #{self.subtypes}"
-        puts "RARITY            -    #{self.rarity}"
-        puts "SET               -    #{self.set}"
-        puts "POWER             -    #{self.power}"
-        puts "TOUGHNESS         -    #{self.toughness}"
+        puts "NAME".bold + "              -    #{self.name}"
+        puts "                                                                                                      ID: #{self.id}".blue
+        puts "MANA COST".bold + "         -    #{self.mana_cost}"
+        puts "TOTAL MANA COST".bold + "   -    #{self.total_mana_cost}"
+        puts "COLOR".bold + "             -    #{self.color}"
+        puts "MANA TYPES".bold + "        -    #{self.mana_type}"
+        puts "TYPES".bold + "            -    #{self.types}"
+        puts "SUBTYPES".bold + "          -    #{self.subtypes}"
+        puts "RARITY".bold + "            -    #{self.rarity}"
+        puts "SET".bold + "               -    #{self.set}"
+        puts "POWER".bold + "             -    #{self.power}"
+        puts "TOUGHNESS".bold + "         -    #{self.toughness}"
         puts "************************************************************************************************************"
         puts self.text
         puts "************************************************************************************************************"
         puts ""
         puts "LEGALITY          -    #{self.legality}"
-        puts "VIEW IMAGE        -    #{self.imageURL}"
+        puts "VIEW IMAGE        -    " + "#{self.imageURL}".blue
     end
 
     def display_by_name_and_id

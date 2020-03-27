@@ -9,11 +9,11 @@ class CLI
     end
     
     def greeting
-        puts '-' * 100
+        puts ('-' * 100).blue
         puts ''
-        puts "Welcome to the Magic Manager"
+        puts "Welcome to the Magic Manager".bold
         puts ''
-        puts '-' * 100
+        puts ('-' * 100).blue
         puts ''
         puts 'Here you can keep your Magic the Gathering collection organized.'
         puts ''
@@ -46,7 +46,7 @@ class CLI
 
     def prompt_user
        puts ''
-       puts "MAIN MENU"
+       puts "MAIN MENU".bold
        puts '-' * 30
        prompt = TTY::Prompt.new
        prompt.select("Select an option below:", ["Search for New Cards", "View Collection", 
@@ -85,11 +85,11 @@ class CLI
 
     def exit
         puts ''
-        puts '-' * 100
+        puts ('-' * 100).blue
         puts ''
-        puts "Happy Hunting!"
+        puts "Happy Hunting!".bold
         puts ''
-        puts '-' * 100
+        puts ('-' * 100).blue
         puts ''
     end
 
@@ -128,8 +128,8 @@ class CLI
 
     def prompt_search_params
         puts ''
-        puts 'Search Menu'
-        puts '-' * 30
+        puts 'Search Menu'.bold
+        puts ('-' * 30).blue
         prompt = TTY::Prompt.new
         prompt.select("Select an option below:", ["Search by name", "Search by color", 
         "Search by type", "Back"])
@@ -281,8 +281,8 @@ end
 
 def collection_menu_prompt
     puts ''
-    puts "Collection Menu"
-    puts "-" * 30
+    puts "Collection Menu".bold
+    puts ("-" * 30).blue
     prompt = TTY::Prompt.new
     prompt.select("Select an option below:", ["View all cards", "View all cards by color", 
     "View all cards by rarity", "Back"])
@@ -343,8 +343,8 @@ end
 
     def deck_menu_prompt
         puts ''
-        puts 'Deck Menu'
-        puts '-' * 30
+        puts 'Deck Menu'.bold
+        puts ('-' * 30).blue
         prompt = TTY::Prompt.new
         prompt.select("Select an option below:", ["Create a new deck", "View all decks", 
         "View / Edit a deck", "Back"])
