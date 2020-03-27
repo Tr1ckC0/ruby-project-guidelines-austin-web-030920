@@ -21,12 +21,13 @@ class CLI
     end
 
     def user_login
-        puts "username:"
-        # username = get_input
-        username = "tr1ckC0"
-        puts "password:"
-        # password = get_input
-        password = "123456789"
+        prompt = TTY::Prompt.new
+        username = prompt.ask("Username:")
+        # username = "tr1ckC0"
+
+        prompt = TTY::Prompt.new
+        password = prompt.mask("Password:")
+        # password = "123456789"
         @current_user = User.find_or_create_by(username: username, password: password)
         ####to authenticate
                 #find or creat by username
@@ -445,7 +446,6 @@ end
 
     def view_all_cards_in_deck(deck)
         puts "All the cards in #{deck.title}"
-        puts '-' * 20
         deck.cards.each {|card| card.display_by_name_and_id}
     end
 
@@ -453,10 +453,14 @@ end
         deck = select_deck
         view_all_cards
         puts "Above is your card collection"
-        puts "Please enter the name of the card you would like to add:"
-        card_name = get_input
+        puts ''
+        prompt = TTY::Prompt.new
+        # puts "Please enter the name of the card you would like to add:"
+        card_name = prompt.ask("Please enter the name of the card you would like to add:")
+
         card = @current_user.cards.find_by(name: card_name)
         DeckCard.create(deck_id: deck.id, card_id: card.id)
+        
         puts "#{card.name} Added Successfully to #{deck.title}"
         puts ''
         puts 'Add another card? y / n'
@@ -471,8 +475,11 @@ end
     def remove_a_card
         deck = select_deck
         view_all_cards_in_deck(deck)
-        puts "Please enter the name of the card you would like to remove:"
-        card_name = get_input
+        puts "Above is your card collection"
+        prompt = TTY::Prompt.new
+        # puts "Please enter the name of the card you would like to add:"
+        card_name = prompt.ask("Please enter the name of the card you would like to add:")
+        # card_name = get_input
         card = @current_user.cards.find_by(name: card_name)
         DeckCard.find_by(deck_id: deck.id, card_id: card.id).destroy
         deck.cards.delete(card)
